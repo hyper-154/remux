@@ -1,0 +1,28 @@
+applications:
+  remux:
+    type: docker:1
+    image:
+      name: "ghcr.io/lostb1t/remux:v0.25.0"   # pin a tag, not latest
+
+    mounts:
+      "/data":
+        source: storage
+        source_path: data
+
+    web:
+      upstream:
+        socket_family: tcp
+      locations:
+        "/":
+          passthru: true
+          request_buffering:
+            enabled: false
+
+services: null
+
+routes:
+  "https://{default}/":
+    type: upstream
+    upstream: "remux:http"
+    cache:
+      enabled: false
